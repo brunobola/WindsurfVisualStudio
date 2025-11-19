@@ -70,7 +70,8 @@ internal sealed class SuggestionTagger : ITagger<SuggestionTag>
     {
         try
         {
-            // If this isn't the most up-to-date version of the buffer, then ignore it for now (we'll
+            // If this isn't the most up-to-date version of the buffer, then ignore it for now
+            // (we'll
             newSuggestion = newSuggestion.TrimEnd();
             newSuggestion = newSuggestion.Replace("\r", "");
             ClearSuggestion();
@@ -110,7 +111,8 @@ internal sealed class SuggestionTagger : ITagger<SuggestionTag>
             var suggestionLines = combineSuggestion.Split('\n');
             suggestion = new Tuple<String, String[]>(combineSuggestion, suggestionLines);
             return Update();
-        }catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             CodeiumVSPackage.Instance?.LogAsync("Exception: " + ex.ToString());
             return false;
@@ -194,8 +196,8 @@ internal sealed class SuggestionTagger : ITagger<SuggestionTag>
     {
         try
         {
-            // If this isn't the most up-to-date version of the buffer, then ignore it for now (we'll
-            // eventually get another change event).
+            // If this isn't the most up-to-date version of the buffer, then ignore it for now
+            // (we'll eventually get another change event).
             if (e.After != buffer.CurrentSnapshot) return;
             this.Update();
         }
@@ -281,7 +283,7 @@ internal sealed class SuggestionTagger : ITagger<SuggestionTag>
     public void UpdateAdornment(IWpfTextView view, string userText, int suggestionStart)
     {
         try
-        { 
+        {
             stackPanel.Children.Clear();
             var inlineTagger = GetTagger();
             if (inlineTagger == null) { return; }
@@ -296,7 +298,8 @@ internal sealed class SuggestionTagger : ITagger<SuggestionTag>
 
                     if (isTextInsertion && suggestionIndex < userIndex)
                     {
-                        if (suggestionIndex > 0 && suggestionIndex < line.Length && char.IsWhiteSpace(line[suggestionIndex - 1]) &&
+                        if (suggestionIndex > 0 && suggestionIndex < line.Length &&
+                            char.IsWhiteSpace(line[suggestionIndex - 1]) &&
                             userText.Length > insertionPoint + 1 &&
                             !char.IsWhiteSpace(userText[userText.Length - insertionPoint - 1]))
                         {
@@ -331,21 +334,23 @@ internal sealed class SuggestionTagger : ITagger<SuggestionTag>
 
             this.adornmentLayer.RemoveAllAdornments();
 
-            // usually only happens the moment a bunch of text has rentered such as an undo operation
-                ITextSnapshotLine snapshotLine =
-                    view.TextSnapshot.GetLineFromLineNumber(currentTextLineN);
-                var start = view.TextViewLines.GetCharacterBounds(snapshotLine.Start);
+            // usually only happens the moment a bunch of text has rentered such as an undo
+            // operation
+            ITextSnapshotLine snapshotLine =
+                view.TextSnapshot.GetLineFromLineNumber(currentTextLineN);
+            var start = view.TextViewLines.GetCharacterBounds(snapshotLine.Start);
 
-                // Place the image in the top left hand corner of the line
-                Canvas.SetLeft(stackPanel, start.Left);
-                Canvas.SetTop(stackPanel, start.TextTop);
-                var span = snapshotLine.Extent;
-                // Add the image to the adornment layer and make it relative to the viewport
-                this.adornmentLayer.AddAdornment(
-                    AdornmentPositioningBehavior.TextRelative, span, null, stackPanel, null);
+            // Place the image in the top left hand corner of the line
+            Canvas.SetLeft(stackPanel, start.Left);
+            Canvas.SetTop(stackPanel, start.TextTop);
+            var span = snapshotLine.Extent;
+            // Add the image to the adornment layer and make it relative to the viewport
+            this.adornmentLayer.AddAdornment(
+                AdornmentPositioningBehavior.TextRelative, span, null, stackPanel, null);
         }
         catch (Exception e)
-        { Debug.Write(e);
+        {
+            Debug.Write(e);
         }
     }
 
@@ -362,7 +367,8 @@ internal sealed class SuggestionTagger : ITagger<SuggestionTag>
                 FormatText(block);
             }
 
-            ITextSnapshotLine snapshotLine = view.TextSnapshot.GetLineFromLineNumber(currentTextLineN);
+            ITextSnapshotLine snapshotLine =
+                view.TextSnapshot.GetLineFromLineNumber(currentTextLineN);
 
             var start = view.TextViewLines.GetCharacterBounds(snapshotLine.Start);
 
@@ -447,16 +453,13 @@ internal sealed class SuggestionTagger : ITagger<SuggestionTag>
     {
         try
         {
-            if (!showSuggestion || suggestion == null)
-            {
-                return false;
-            }
+            if (!showSuggestion || suggestion == null) { return false; }
 
             String untrimLine = this.snapshot.GetLineFromLineNumber(currentTextLineN).GetText();
             String line = untrimLine.Trim();
 
-            int suggestionLineN =
-                StringCompare.CheckSuggestion(suggestion.Item1, line, isTextInsertion, insertionPoint);
+            int suggestionLineN = StringCompare.CheckSuggestion(
+                suggestion.Item1, line, isTextInsertion, insertionPoint);
             if (suggestionLineN >= 0)
             {
                 int diff = untrimLine.Length - untrimLine.TrimStart().Length;
@@ -465,7 +468,6 @@ internal sealed class SuggestionTagger : ITagger<SuggestionTag>
                 ReplaceText(whitespace + suggestion.Item1, currentTextLineN);
                 return true;
             }
-
         }
         catch (Exception e)
         {
@@ -529,11 +531,9 @@ internal sealed class SuggestionTagger : ITagger<SuggestionTag>
             showSuggestion = false;
 
             MarkDirty();
-
         }
         catch (Exception ex)
         {
-
         }
     }
 
@@ -558,12 +558,16 @@ internal sealed class SuggestionTagger : ITagger<SuggestionTag>
             var endLine = view.TextSnapshot.GetLineFromPosition(changeEnd);
 
             var span = new SnapshotSpan(startLine.Start, endLine.EndIncludingLineBreak)
-                .TranslateTo(targetSnapshot: newSnapshot, SpanTrackingMode.EdgePositive);
+                           .TranslateTo(targetSnapshot: newSnapshot, SpanTrackingMode.EdgePositive);
 
             // lines we are marking dirty
             // currently all of them for simplicity
             if (this.TagsChanged != null) { TagsChanged(this, new SnapshotSpanEventArgs(span)); }
-        } catch (Exception e) { Debug.Write(e); }
+        }
+        catch (Exception e)
+        {
+            Debug.Write(e);
+        }
     }
 }
 

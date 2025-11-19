@@ -40,6 +40,5 @@ internal sealed partial class PackageIds
     public const int ExplainSelectionCodeBlock = 0x0111;
     public const int GenerateSelectionFunctionDocstring = 0x0112;
     public const int DebugButton = 0x0600;
-
 }
 }

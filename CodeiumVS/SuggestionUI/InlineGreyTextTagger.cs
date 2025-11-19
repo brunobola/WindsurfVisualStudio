@@ -72,11 +72,12 @@ internal class InlineGreyTextTagger : ITagger<IntraTextAdornmentTag>
             var endLine = view.TextSnapshot.GetLineFromPosition(changeEnd);
 
             var span = new SnapshotSpan(startLine.Start, endLine.EndIncludingLineBreak)
-                            .TranslateTo(targetSnapshot: view.TextBuffer.CurrentSnapshot,
+                           .TranslateTo(targetSnapshot: view.TextBuffer.CurrentSnapshot,
                                         SpanTrackingMode.EdgePositive);
 
             TagsChanged(this, new SnapshotSpanEventArgs(new SnapshotSpan(span.Start, span.End)));
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             Debug.Write(e);
         }

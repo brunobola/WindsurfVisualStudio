@@ -41,8 +41,11 @@ public class LanguageServerController
             if (request.ShouldSerializeopen_file_pointer())
             {
                 var data = request.open_file_pointer;
-                OpenSelection(
-                    data.file_uri.IsNullOrEmpty() ? data.file_path : data.file_uri, data.start_line, data.start_col, data.end_line, data.end_col);
+                OpenSelection(data.file_uri.IsNullOrEmpty() ? data.file_path : data.file_uri,
+                              data.start_line,
+                              data.start_col,
+                              data.end_line,
+                              data.end_col);
             }
             else if (request.ShouldSerializeinsert_at_cursor())
             {
@@ -63,7 +66,10 @@ public class LanguageServerController
                         replacement += line.text + "\n";
                     }
                 }
-                ApplyDiff(data.uri.IsNullOrEmpty() ? data.file_path : data.uri, data.diff.start_line, data.diff.end_line, replacement);
+                ApplyDiff(data.uri.IsNullOrEmpty() ? data.file_path : data.uri,
+                          data.diff.start_line,
+                          data.diff.end_line,
+                          replacement);
             }
         }
 
@@ -350,8 +356,8 @@ internal static class WebChatServer
     {
         if (ws == null || !ws.IsAlive)
         {
-            CodeiumVSPackage.Instance.Log(
-                "Language Server Controller: Unable to send the request because the connection is closed.");
+            CodeiumVSPackage.Instance.Log("Language Server Controller: Unable to send the " +
+                                          "request because the connection is closed.");
             return false;
         }
 

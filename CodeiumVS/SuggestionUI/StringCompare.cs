@@ -88,9 +88,11 @@ public static class StringCompare
             return res.Item1 >= endPoint ? res.Item2 : -1;
         }
     }
-        
-    private static readonly System.Text.RegularExpressions.Regex newLineMatcher = new System.Text.RegularExpressions.Regex(@"(?:\r\n|\n|\r)",
-        System.Text.RegularExpressions.RegexOptions.Compiled | System.Text.RegularExpressions.RegexOptions.Singleline);
+
+    private static readonly System.Text.RegularExpressions.Regex newLineMatcher =
+        new System.Text.RegularExpressions.Regex(
+            @"(?:\r\n|\n|\r)", System.Text.RegularExpressions.RegexOptions.Compiled |
+                                   System.Text.RegularExpressions.RegexOptions.Singleline);
 
     /// <summary>
     /// Returns the index of the first new line in the string, or -1 if not found
@@ -100,10 +102,9 @@ public static class StringCompare
     {
         System.Text.RegularExpressions.Match newLineMatch = newLineMatcher.Match(text);
 
-        if (newLineMatch.Success)
-            return newLineMatch.Index;
+        if (newLineMatch.Success) return newLineMatch.Index;
 
         return -1;
     }
-    }
+}
 }

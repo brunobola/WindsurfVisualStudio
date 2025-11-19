@@ -40,9 +40,7 @@ public class LanguageServer
     private readonly HttpClient _httpClient;
     private readonly CodeiumVSPackage _package;
 
-
     public readonly LanguageServerController Controller;
-
 
     public LanguageServer()
     {
@@ -73,10 +71,7 @@ public class LanguageServer
 
         _metadata.request_id = 0;
         string ideName = "visual_studio";
-        if (_languageServerVersion == "1.16.0")
-        {
-            ideName = "vscode";
-        }
+        if (_languageServerVersion == "1.16.0") { ideName = "vscode"; }
         _metadata.ide_name = ideName;
         _metadata.ide_version = ideVersion;
         _metadata.extension_name = Vsix.Name;
@@ -157,20 +152,21 @@ public class LanguageServer
     public async Task SignInAsync()
     {
         // this will block until the sign in process has finished
-        async Task<string?> WaitForAuthTokenAsync()
+        async Task < string ? > WaitForAuthTokenAsync()
         {
             // wait until we got the actual port of the LSP
             await WaitReadyAsync();
 
             // TODO: should we use timeout = Timeout.InfiniteTimeSpan? default value is 100s (1m40s)
             GetAuthTokenResponse? result =
-                await RequestCommandAsync<GetAuthTokenResponse>("GetAuthToken", new { });
+                await RequestCommandAsync<GetAuthTokenResponse>("GetAuthToken", new {});
 
             if (result == null)
             {
                 // show an error message box
                 var msgboxResult = await VS.MessageBox.ShowAsync(
-                    "Windsurf: Failed to get the Authentication Token. Please check the output window for more details.",
+                    "Windsurf: Failed to get the Authentication Token. Please check the output " +
+                    "window for more details.",
                     "Do you want to retry?",
                     OLEMSGICON.OLEMSGICON_WARNING,
                     OLEMSGBUTTON.OLEMSGBUTTON_RETRYCANCEL,
@@ -226,7 +222,8 @@ public class LanguageServer
             {
                 string portalUrl = _package.SettingsPage.PortalUrl.TrimEnd('/');
                 extensionBaseUrl = portalUrl;
-                string version = await new HttpClient().GetStringAsync(portalUrl + "/api/version");
+                string version = await new HttpClient().GetStringAsync(portalUrl + ("/api/" +
+                                                                                    "version"));
                 if (version.Equals("test", StringComparison.OrdinalIgnoreCase) ||
                     Regex.IsMatch(version, @"^\d+\.\d+\.\d+$"))
                 {
@@ -308,12 +305,12 @@ public class LanguageServer
                                                  }),
             ];
 
-            errorBar.Show(
-                "[Windsurf] Critical Error: Failed to download the language server. Do you want to retry?",
-                KnownMonikers.StatusError,
-                true,
-                null,
-                [.. actions, .. NotificationInfoBar.SupportActions]);
+            errorBar.Show("[Windsurf] Critical Error: Failed to download the language server. Do " +
+                          "you want to retry?",
+                          KnownMonikers.StatusError,
+                          true,
+                          null,
+                          [..actions, ..NotificationInfoBar.SupportActions]);
         }
         else
         {
@@ -384,8 +381,7 @@ public class LanguageServer
         webClient.DownloadFileCompleted += (s, e) =>
         {
             ThreadHelper.JoinableTaskFactory
-                .RunAsync(async delegate
-                {
+                .RunAsync(async delegate {
                     await ThreadDownload_OnCompletedAsync(e, progressDialog, downloadDest);
                 })
                 .FireAndForget();
@@ -461,8 +457,8 @@ public class LanguageServer
         {
         }
 
-        await _package.LogAsync(
-            "LanguageServer.VerifyLanguageServerSignatureAsync: Failed to verify the language server digital signature");
+        await _package.LogAsync("LanguageServer.VerifyLanguageServerSignatureAsync: Failed to " +
+                                "verify the language server digital signature");
 
         NotificationInfoBar errorBar = new();
         KeyValuePair<string, Action>[] actions = [
@@ -493,12 +489,12 @@ public class LanguageServer
         ];
 
         await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-        errorBar.Show(
-            "[Windsurf] Failed to verify the language server digital signature. The executable might be corrupted.",
-            KnownMonikers.IntellisenseWarning,
-            true,
-            null,
-            actions);
+        errorBar.Show("[Windsurf] Failed to verify the language server digital signature. The " +
+                      "executable might be corrupted.",
+                      KnownMonikers.IntellisenseWarning,
+                      true,
+                      null,
+                      actions);
 
         return false;
     }
@@ -531,7 +527,8 @@ public class LanguageServer
                 $"LanguageServer.StartAsync: Failed to create directories; Exception: {ex}");
 
             new NotificationInfoBar().Show(
-                "[Windsurf] Critical error: Failed to create language server directories. Please check the output window for more details.",
+                "[Windsurf] Critical error: Failed to create language server directories. Please " +
+                "check the output window for more details.",
                 KnownMonikers.StatusError,
                 true,
                 null,
@@ -598,12 +595,12 @@ public class LanguageServer
             ];
 
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-            errorBar.Show(
-                "[Windsurf] Critical Error: Failed to start the language server. Do you want to retry?",
-                KnownMonikers.StatusError,
-                true,
-                null,
-                [.. actions, .. NotificationInfoBar.SupportActions]);
+            errorBar.Show("[Windsurf] Critical Error: Failed to start the language server. Do " +
+                          "you want to retry?",
+                          KnownMonikers.StatusError,
+                          true,
+                          null,
+                          [..actions, ..NotificationInfoBar.SupportActions]);
 
             return;
         }
@@ -620,12 +617,12 @@ public class LanguageServer
 
             // warn the user about the issue
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-            new NotificationInfoBar().Show(
-                "[Windsurf] Failed to read output from the language server, Windsurf might not work properly.",
-                KnownMonikers.IntellisenseWarning,
-                true,
-                null,
-                NotificationInfoBar.SupportActions);
+            new NotificationInfoBar().Show("[Windsurf] Failed to read output from the language " +
+                                           "server, Windsurf might not work properly.",
+                                           KnownMonikers.IntellisenseWarning,
+                                           true,
+                                           null,
+                                           NotificationInfoBar.SupportActions);
 
             // fall back to reading the port file
             var timeoutSec = 120;
@@ -655,7 +652,8 @@ public class LanguageServer
             else
             {
                 new NotificationInfoBar().Show(
-                    "[Windsurf] Critical Error: Failed to get the language server port. Please check the output window for more details.",
+                    "[Windsurf] Critical Error: Failed to get the language server port. Please " +
+                    "check the output window for more details.",
                     KnownMonikers.StatusError,
                     true,
                     null,
@@ -808,66 +806,72 @@ public class LanguageServer
 
         List<string> projectsToIndex = new List<string>(inputDirectoriesToIndex);
         int maxToIndex = 10;
-        projectsToIndex.AddRange(await GetDirectoriesToIndex(inputDirectoriesToIndex, openFileProjects, maxToIndex - projectsToIndex.Count, dte));
+        projectsToIndex.AddRange(await GetDirectoriesToIndex(
+            inputDirectoriesToIndex, openFileProjects, maxToIndex - projectsToIndex.Count, dte));
         await _package.LogAsync($"Number of projects to index: {projectsToIndex.Count}");
 
         for (int i = 0; i < Math.Min(maxToIndex, projectsToIndex.Count); i++)
         {
             try
             {
-                await _package.LogAsync($"Processing Project {i + 1} of {projectsToIndex.Count}: {projectsToIndex[i]}");
-                AddTrackedWorkspaceResponse response = await AddTrackedWorkspaceAsync(projectsToIndex[i]);
-                if (response != null)
-                {
-                    _initializedWorkspace = true;
-                }
+                await _package.LogAsync(
+                    $"Processing Project {i + 1} of {projectsToIndex.Count}: {projectsToIndex[i]}");
+                AddTrackedWorkspaceResponse response =
+                    await AddTrackedWorkspaceAsync(projectsToIndex[i]);
+                if (response != null) { _initializedWorkspace = true; }
             }
             catch (Exception ex)
             {
-                await _package.LogAsync($"Error processing project {i + 1} of {projectsToIndex.Count}: {ex.Message}");
+                await _package.LogAsync(
+                    $"Error processing project {i + 1} of {projectsToIndex.Count}: {ex.Message}");
             }
         }
     }
 
-    private async Task<List<string>> GetDirectoriesToIndex(HashSet<string> processedProjects, HashSet<EnvDTE.Project> openFileProjects, int remainingToFind, DTE dte)
+    private async Task<List<string>> GetDirectoriesToIndex(HashSet<string> processedProjects,
+                                                           HashSet<EnvDTE.Project> openFileProjects,
+                                                           int remainingToFind, DTE dte)
     {
         await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
         HashSet<string> remainingProjectsToIndexPath = new HashSet<string>();
         async Task AddFilesToIndexLists(EnvDTE.Project project)
         {
-            if (remainingToFind <= 0)
-            {
-                return;
-            }
+            if (remainingToFind <= 0) { return; }
             string projectFullName = project.FullName;
             await _package.LogAsync($"Adding files to index of project: {projectFullName}");
-            if (!string.IsNullOrEmpty(projectFullName) && !processedProjects.Any(p => projectFullName.StartsWith(p)))
+            if (!string.IsNullOrEmpty(projectFullName) &&
+                !processedProjects.Any(p => projectFullName.StartsWith(p)))
             {
                 string projectName = Path.GetFileNameWithoutExtension(projectFullName);
                 IEnumerable<string> commonDirs = Enumerable.Empty<string>();
                 string projectDir = Path.GetDirectoryName(projectFullName);
                 // Parse the proj file to find all source directories
-                if (File.Exists(projectFullName) && (projectFullName.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase) || projectFullName.EndsWith(".vcxproj", StringComparison.OrdinalIgnoreCase)))
+                if (File.Exists(projectFullName) &&
+                    (projectFullName.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase) ||
+                     projectFullName.EndsWith(".vcxproj", StringComparison.OrdinalIgnoreCase)))
                 {
                     try
                     {
                         XDocument projDoc = XDocument.Load(projectFullName);
                         IEnumerable<string> compileItems;
-                        if (projectFullName.EndsWith(".vcxproj", StringComparison.OrdinalIgnoreCase))
+                        if (projectFullName.EndsWith(".vcxproj",
+                                                     StringComparison.OrdinalIgnoreCase))
                         {
                             // Handle C++ project files
                             compileItems = projDoc.Descendants()
-                                .Where(x => x.Name.LocalName == "ClCompile" || x.Name.LocalName == "ClInclude")
-                                .Select(x => x.Attribute("Include")?.Value)
-                                .Where(x => !string.IsNullOrEmpty(x));
+                                               .Where(x => x.Name.LocalName == "ClCompile" ||
+                                                           x.Name.LocalName == "ClInclude")
+                                               .Select(x => x.Attribute("Include")?.Value)
+                                               .Where(x => !string.IsNullOrEmpty(x));
                         }
                         else
                         {
                             // Handle C# project files
                             compileItems = projDoc.Descendants()
-                                .Where(x => x.Name.LocalName == "Compile" || x.Name.LocalName == "Content")
-                                .Select(x => x.Attribute("Include")?.Value)
-                                .Where(x => !string.IsNullOrEmpty(x));
+                                               .Where(x => x.Name.LocalName == "Compile" ||
+                                                           x.Name.LocalName == "Content")
+                                               .Select(x => x.Attribute("Include")?.Value)
+                                               .Where(x => !string.IsNullOrEmpty(x));
                         }
 
                         var fullPaths = new List<string>();
@@ -877,20 +881,20 @@ public class LanguageServer
                             fullPaths.Add(fullPath);
                         }
 
-                        commonDirs = Utilities.FileUtilities.FindMinimumEncompassingDirectories(fullPaths);
+                        commonDirs =
+                            Utilities.FileUtilities.FindMinimumEncompassingDirectories(fullPaths);
                     }
                     catch (Exception ex)
                     {
-                        await _package.LogAsync($"Failed to parse project file {projectFullName}: {ex.Message}");
+                        await _package.LogAsync(
+                            $"Failed to parse project file {projectFullName}: {ex.Message}");
                     }
                 }
 
-                if (commonDirs.Count() == 0)
-                {
-                    commonDirs = new[] { projectDir };
-                }
+                if (commonDirs.Count() == 0) { commonDirs = new[] { projectDir }; }
 
-                await _package.LogAsync($"Found set-covering directories for {projectName}: {commonDirs.Count()}");
+                await _package.LogAsync(
+                    $"Found set-covering directories for {projectName}: {commonDirs.Count()}");
                 foreach (var dir in commonDirs)
                 {
                     remainingToFind -= 1;
@@ -904,10 +908,7 @@ public class LanguageServer
             {
                 try
                 {
-                    if (item.SubProject != null)
-                    {
-                        await AddFilesToIndexLists(item.SubProject);
-                    }
+                    if (item.SubProject != null) { await AddFilesToIndexLists(item.SubProject); }
                 }
                 catch (Exception ex)
                 {
@@ -931,10 +932,7 @@ public class LanguageServer
         }
         foreach (EnvDTE.Project project in dte.Solution.Projects)
         {
-            if (openFileProjects.Contains(project))
-            {
-                continue;
-            }
+            if (openFileProjects.Contains(project)) { continue; }
             try
             {
                 await AddFilesToIndexLists(project);
@@ -944,14 +942,10 @@ public class LanguageServer
                 await _package.LogAsync($"Failed to process remaining project: {ex.Message}");
                 continue;
             }
-            if (remainingToFind <= 0)
-            {
-                break;
-            }
+            if (remainingToFind <= 0) { break; }
         }
         return remainingProjectsToIndexPath.ToList();
     }
-
 
     private async Task<T?> RequestCommandAsync<T>(string command, object data,
                                                   CancellationToken cancellationToken = default)
@@ -966,35 +960,25 @@ public class LanguageServer
                         int cursorPosition, string lineEnding, int tabSize, bool insertSpaces,
                         CancellationToken token)
     {
-        if (!_initializedWorkspace)
-        {
-            await InitializeTrackedWorkspaceAsync();
-        }
+        if (!_initializedWorkspace) { await InitializeTrackedWorkspaceAsync(); }
         var uri = new System.Uri(absolutePath);
         var absoluteUri = uri.AbsoluteUri;
         GetCompletionsRequest data =
-            new()
-            {
-                metadata = GetMetadata(),
-                document = new()
-                {
-                    text = text,
-                    editor_language = language.Name,
-                    language = language.Type,
-                    cursor_offset = (ulong)cursorPosition,
-                    line_ending = lineEnding,
-                    absolute_path = absolutePath,
-                    absolute_uri = absoluteUri,
-                    relative_path = Path.GetFileName(absolutePath)
-                },
-                editor_options = new()
-                {
-                    tab_size = (ulong)tabSize,
-                    insert_spaces = insertSpaces,
-                    disable_autocomplete_in_comments =
+            new() { metadata = GetMetadata(),
+                    document = new() { text = text,
+                                       editor_language = language.Name,
+                                       language = language.Type,
+                                       cursor_offset = (ulong)cursorPosition,
+                                       line_ending = lineEnding,
+                                       absolute_path = absolutePath,
+                                       absolute_uri = absoluteUri,
+                                       relative_path = Path.GetFileName(absolutePath) },
+                    editor_options = new() {
+                        tab_size = (ulong)tabSize,
+                        insert_spaces = insertSpaces,
+                        disable_autocomplete_in_comments =
                             !_package.SettingsPage.EnableCommentCompletion,
-                }
-            };
+                    } };
 
         GetCompletionsResponse? result =
             await RequestCommandAsync<GetCompletionsResponse>("GetCompletions", data, token);
@@ -1011,7 +995,7 @@ public class LanguageServer
 
     public async Task<GetProcessesResponse?> GetProcessesAsync()
     {
-        return await RequestCommandAsync<GetProcessesResponse>("GetProcesses", new { });
+        return await RequestCommandAsync<GetProcessesResponse>("GetProcesses", new {});
     }
 
     public async Task<AddTrackedWorkspaceResponse?> AddTrackedWorkspaceAsync(string workspacePath)
@@ -1022,77 +1006,60 @@ public class LanguageServer
 
     public Metadata GetMetadata()
     {
-        return new()
-        {
-            request_id = _metadata.request_id++,
-            api_key = _metadata.api_key,
-            ide_name = _metadata.ide_name,
-            ide_version = _metadata.ide_version,
+        return new() { request_id = _metadata.request_id++,
+                       api_key = _metadata.api_key,
+                       ide_name = _metadata.ide_name,
+                       ide_version = _metadata.ide_version,
 
-            extension_name = _metadata.extension_name,
-            extension_version = _metadata.extension_version,
-            session_id = _metadata.session_id,
-            locale = _metadata.locale,
-            disable_telemetry = _metadata.disable_telemetry
-        };
+                       extension_name = _metadata.extension_name,
+                       extension_version = _metadata.extension_version,
+                       session_id = _metadata.session_id,
+                       locale = _metadata.locale,
+                       disable_telemetry = _metadata.disable_telemetry };
     }
 
-    public async Task<IList<FunctionInfo>?>
-        GetFunctionsAsync(string absolutePath, string text, Languages.LangInfo language,
-            int cursorPosition, CancellationToken token)
+    public async Task<IList<FunctionInfo>?> GetFunctionsAsync(string absolutePath, string text,
+                                                              Languages.LangInfo language,
+                                                              int cursorPosition,
+                                                              CancellationToken token)
     {
-        if (!_initializedWorkspace)
-        {
-            await InitializeTrackedWorkspaceAsync();
-        }
+        if (!_initializedWorkspace) { await InitializeTrackedWorkspaceAsync(); }
         var uri = new System.Uri(absolutePath);
         var absoluteUri = uri.AbsoluteUri;
-        GetFunctionsRequest data =
-            new()
-            {
-                document = new()
-                {
-                    text = text.Replace("\r", ""),
-                    editor_language = language.Name,
-                    language = language.Type,
-                    cursor_offset = (ulong)cursorPosition,
-                    line_ending = "\n",
-                    absolute_path = absolutePath,
-                    absolute_uri = absoluteUri,
-                    relative_path = Path.GetFileName(absolutePath)
-                },
-            };
+        GetFunctionsRequest data = new() {
+            document = new() { text = text.Replace("\r", ""),
+                               editor_language = language.Name,
+                               language = language.Type,
+                               cursor_offset = (ulong)cursorPosition,
+                               line_ending = "\n",
+                               absolute_path = absolutePath,
+                               absolute_uri = absoluteUri,
+                               relative_path = Path.GetFileName(absolutePath) },
+        };
 
         GetFunctionsResponse? result =
             await RequestCommandAsync<GetFunctionsResponse>("GetFunctions", data, token);
         return result != null ? result.FunctionCaptures : [];
     }
 
-    public async Task<IList<ClassInfo>?>
-        GetClassInfosAsync(string absolutePath, string text, Languages.LangInfo language,
-            int cursorPosition, string lineEnding, CancellationToken token)
+    public async Task<IList<ClassInfo>?> GetClassInfosAsync(string absolutePath, string text,
+                                                            Languages.LangInfo language,
+                                                            int cursorPosition, string lineEnding,
+                                                            CancellationToken token)
     {
-        if (!_initializedWorkspace)
-        {
-            await InitializeTrackedWorkspaceAsync();
-        }
+        if (!_initializedWorkspace) { await InitializeTrackedWorkspaceAsync(); }
         var uri = new System.Uri(absolutePath);
         var absoluteUri = uri.AbsoluteUri;
-        GetClassInfosRequest data =
-            new()
-            {
-                document = new()
-                {
-                    text = text.Replace("\r", ""),
-                    editor_language = language.Name,
-                    language = language.Type,
-                    cursor_offset = (ulong)cursorPosition,
-                    line_ending = "\n",
-                    absolute_path = absolutePath,
-                    absolute_uri = absoluteUri,
-                    relative_path = Path.GetFileName(absolutePath)
-                },
-            };
+        GetClassInfosRequest data = new() {
+            document = new() { text = text.Replace("\r", ""),
+                               editor_language = language.Name,
+                               language = language.Type,
+                               cursor_offset = (ulong)cursorPosition,
+                               line_ending = "\n",
+                               absolute_path = absolutePath,
+                               absolute_uri = absoluteUri,
+                               relative_path = Path.GetFileName(absolutePath) },
+        };
 
         GetClassInfosResponse? result =
             await RequestCommandAsync<GetClassInfosResponse>("GetClassInfos", data, token);

@@ -88,11 +88,9 @@ public partial class ChatToolWindowControl : UserControl, IComponentConnector
 
         // add the info bar to notify the user when the webview failed to load
         var model = new InfoBarModel(
-            new[] {
-                new InfoBarTextSpan(
-                    "It looks like Windsurf Chat is taking too long to load, do you want to reload? "),
-                new InfoBarHyperlink("Reload")
-            },
+            new[] { new InfoBarTextSpan("It looks like Windsurf Chat is taking too long to load, " +
+                                        "do you want to reload? "),
+                    new InfoBarHyperlink("Reload") },
             KnownMonikers.IntellisenseWarning,
             true);
 
@@ -160,7 +158,7 @@ public partial class ChatToolWindowControl : UserControl, IComponentConnector
 
         string uriString =
             clientUrl + "?" + string.Join("&", data.Select((pair) => $"{pair.Key}={pair.Value}"));
-        
+
         await package.LogAsync($"Chat page URL: {uriString}");
 
         try
@@ -207,7 +205,8 @@ public partial class ChatToolWindowControl : UserControl, IComponentConnector
 
                 // focus the text input
                 await webView.ExecuteScriptAsync(
-                    "const editor = document.getElementsByClassName('ql-editor')[0]; if(editor) editor.focus()");
+                    "const editor = document.getElementsByClassName('ql-editor')[0]; if(editor) " +
+                    "editor.focus()");
             })
             .FireAndForget();
     }

@@ -48,34 +48,28 @@ internal class CodeiumCompletionHandler : IOleCommandTarget, IDisposable
     private List<Tuple<String, String>> suggestions;
     private int suggestionIndex;
     private Command CompleteSuggestionCommand;
-    [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)] 
+    [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
     public static extern short GetAsyncKeyState(Int32 keyCode);
 
     public async void GetCompletion()
     {
         try
         {
-            if (_document == null || !package.IsSignedIn())
-            {
-                return;
-            }
+            if (_document == null || !package.IsSignedIn()) { return; }
 
             UpdateRequestTokenSource(new CancellationTokenSource());
 
             SnapshotPoint? caretPoint = _view.Caret.Position.Point.GetPoint(
                 textBuffer => (!textBuffer.ContentType.IsOfType("projection")),
                 PositionAffinity.Successor);
-            if (!caretPoint.HasValue)
-            {
-                return;
-            }
+            if (!caretPoint.HasValue) { return; }
 
             var caretPosition = caretPoint.Value.Position;
 
             string text = _document.TextBuffer.CurrentSnapshot.GetText();
             int cursorPosition = _document.Encoding.IsSingleByte
-                ? caretPosition
-                : Utf16OffsetToUtf8Offset(text, caretPosition);
+                                     ? caretPosition
+                                     : Utf16OffsetToUtf8Offset(text, caretPosition);
 
             if (cursorPosition > text.Length)
             {
@@ -100,10 +94,7 @@ internal class CodeiumCompletionHandler : IOleCommandTarget, IDisposable
             String line = _view.TextBuffer.CurrentSnapshot.GetLineFromLineNumber(lineN).GetText();
             Debug.Print("completions " + list.Count.ToString());
 
-            if (res != VSConstants.S_OK)
-            {
-                return;
-            }
+            if (res != VSConstants.S_OK) { return; }
 
             if (list != null && list.Count > 0)
             {
@@ -123,7 +114,6 @@ internal class CodeiumCompletionHandler : IOleCommandTarget, IDisposable
 
                 await package.LogAsync("Generated " + list.Count + $" proposals");
             }
-
         }
         catch (Exception ex)
         {
@@ -159,8 +149,7 @@ internal class CodeiumCompletionHandler : IOleCommandTarget, IDisposable
             {
                 int endNewline = StringCompare.IndexOfNewLine(end);
 
-                if (endNewline <= -1)
-                    endNewline = end.Length;
+                if (endNewline <= -1) endNewline = end.Length;
 
                 completionText = completionText + end.Substring(0, endNewline);
             }
@@ -172,20 +161,19 @@ internal class CodeiumCompletionHandler : IOleCommandTarget, IDisposable
             var set = new Tuple<String, String>(completionText, completionID);
 
             // Filter out completions that don't match the current intellisense prefix
-            ICompletionSession session = m_provider.CompletionBroker.GetSessions(_view).FirstOrDefault();
+            ICompletionSession session =
+                m_provider.CompletionBroker.GetSessions(_view).FirstOrDefault();
             if (session != null && session.SelectedCompletionSet != null)
             {
                 var completion = session.SelectedCompletionSet.SelectionStatus.Completion;
                 if (completion == null) { continue; }
                 string intellisenseSuggestion = completion.InsertionText;
                 ITrackingSpan intellisenseSpan = session.SelectedCompletionSet.ApplicableTo;
-                SnapshotSpan span = intellisenseSpan.GetSpan(intellisenseSpan.TextBuffer.CurrentSnapshot);
+                SnapshotSpan span =
+                    intellisenseSpan.GetSpan(intellisenseSpan.TextBuffer.CurrentSnapshot);
                 if (span.Length > intellisenseSuggestion.Length) { continue; }
                 string intellisenseInsertion = intellisenseSuggestion.Substring(span.Length);
-                if (!completionText.StartsWith(intellisenseInsertion))
-                {
-                    continue;
-                }
+                if (!completionText.StartsWith(intellisenseInsertion)) { continue; }
             }
             list.Add(set);
         }
@@ -205,10 +193,7 @@ internal class CodeiumCompletionHandler : IOleCommandTarget, IDisposable
 
             foreach (Command command in dte.Commands)
             {
-                if (string.IsNullOrEmpty(command.Name))
-                {
-                    continue;
-                }
+                if (string.IsNullOrEmpty(command.Name)) { continue; }
 
                 if (command.Name.Contains(name) && command.Bindings is object[] bindings)
                 {
@@ -216,10 +201,7 @@ internal class CodeiumCompletionHandler : IOleCommandTarget, IDisposable
                 }
             }
 
-            if (items.Count > 0)
-            {
-                return items[0];
-            }
+            if (items.Count > 0) { return items[0]; }
         }
         catch (Exception ex)
         {
@@ -241,10 +223,7 @@ internal class CodeiumCompletionHandler : IOleCommandTarget, IDisposable
             .FireAndForget(true);
     }
 
-    public LangInfo GetLanguage()
-    { 
-        return _language;
-    }
+    public LangInfo GetLanguage() { return _language; }
 
     private void UpdateRequestTokenSource(CancellationTokenSource newSource)
     {
@@ -268,7 +247,7 @@ internal class CodeiumCompletionHandler : IOleCommandTarget, IDisposable
     }
 
     internal CodeiumCompletionHandler(IVsTextView textViewAdapter, ITextView view,
-        TextViewListener provider)
+                                      TextViewListener provider)
     {
         try
         {
@@ -286,7 +265,8 @@ internal class CodeiumCompletionHandler : IOleCommandTarget, IDisposable
 
             if (_document != null)
             {
-                CodeiumVSPackage.Instance.LogAsync("CodeiumCompletionHandler filepath = " + _document.FilePath);
+                CodeiumVSPackage.Instance.LogAsync("CodeiumCompletionHandler filepath = " +
+                                                   _document.FilePath);
 
                 if (!provider.documentDictionary.ContainsKey(_document.FilePath.ToLower()))
                 {
@@ -306,17 +286,17 @@ internal class CodeiumCompletionHandler : IOleCommandTarget, IDisposable
             view.Caret.PositionChanged += CaretUpdate;
 
             _ = Task.Run(() =>
-            {
-                try
-                {
-                    CompleteSuggestionCommand = GetCommandsAsync("CodeiumAcceptCompletion").Result;
-                }
-                catch (Exception e)
-                {
-                    Debug.Write(e);
-                }
-            });
-
+                         {
+                             try
+                             {
+                                 CompleteSuggestionCommand =
+                                     GetCommandsAsync("CodeiumAcceptCompletion").Result;
+                             }
+                             catch (Exception e)
+                             {
+                                 Debug.Write(e);
+                             }
+                         });
         }
         catch (Exception ex)
         {
@@ -329,32 +309,24 @@ internal class CodeiumCompletionHandler : IOleCommandTarget, IDisposable
         try
         {
             var tagger = GetTagger();
-            if (tagger == null)
-            {
-                return;
-            }
+            if (tagger == null) { return; }
 
-            if (CompleteSuggestionCommand != null && CompleteSuggestionCommand.Bindings is object[] bindings &&
-                bindings.Length > 0)
+            if (CompleteSuggestionCommand != null &&
+                CompleteSuggestionCommand.Bindings is object[] bindings && bindings.Length > 0)
             {
                 tagger.ClearSuggestion();
                 return;
             }
 
             var key = GetAsyncKeyState(0x09);
-            if ((0x8000 & key) > 0)
-            {
-                CompleteSuggestion(false);
-            }
-            else if (!tagger.OnSameLine())
-            {
-                tagger.ClearSuggestion();
-            }
+            if ((0x8000 & key) > 0) { CompleteSuggestion(false); }
+            else if (!tagger.OnSameLine()) { tagger.ClearSuggestion(); }
         }
         catch (Exception ex)
         {
             ThreadHelper.JoinableTaskFactory
-                .RunAsync(async delegate { await CodeiumVSPackage.Instance.LogAsync(ex.ToString()); })
+                .RunAsync(
+                    async delegate { await CodeiumVSPackage.Instance.LogAsync(ex.ToString()); })
                 .FireAndForget(true);
         }
     }
@@ -376,12 +348,11 @@ internal class CodeiumCompletionHandler : IOleCommandTarget, IDisposable
             if (_document != null)
             {
                 _language = Mapper.GetLanguage(_document.TextBuffer.ContentType,
-                    Path.GetExtension(_document.FilePath)?.Trim('.'));
+                                               Path.GetExtension(_document.FilePath)?.Trim('.'));
             }
         }
         catch (Exception ex)
         {
-
         }
     }
 
@@ -411,7 +382,8 @@ internal class CodeiumCompletionHandler : IOleCommandTarget, IDisposable
                     return;
                 }
 
-                bool validSuggestion = tagger.SetSuggestion(suggestions[suggestionIndex].Item1, characterN);
+                bool validSuggestion =
+                    tagger.SetSuggestion(suggestions[suggestionIndex].Item1, characterN);
                 if (!validSuggestion)
                 {
                     suggestionIndex = oldSuggestion;
@@ -424,10 +396,10 @@ internal class CodeiumCompletionHandler : IOleCommandTarget, IDisposable
         catch (Exception ex)
         {
             ThreadHelper.JoinableTaskFactory
-                .RunAsync(async delegate { await CodeiumVSPackage.Instance.LogAsync(ex.ToString()); })
+                .RunAsync(
+                    async delegate { await CodeiumVSPackage.Instance.LogAsync(ex.ToString()); })
                 .FireAndForget(true);
         }
-
     }
 
     public bool CompleteSuggestion(bool checkLine = true)
@@ -435,7 +407,8 @@ internal class CodeiumCompletionHandler : IOleCommandTarget, IDisposable
         var tagger = GetTagger();
         if (tagger != null)
         {
-            if (tagger.IsSuggestionActive() && (tagger.OnSameLine() || !checkLine) && tagger.CompleteText())
+            if (tagger.IsSuggestionActive() && (tagger.OnSameLine() || !checkLine) &&
+                tagger.CompleteText())
             {
                 ClearCompletionSessions();
                 OnSuggestionAccepted(currentCompletionID);
@@ -504,7 +477,8 @@ internal class CodeiumCompletionHandler : IOleCommandTarget, IDisposable
         {
             VsShellUtilities.ShowMessageBox(
                 this.package,
-                "Please disable IntelliCode to use Codeium. You can access Intellicode settings via Tools --> Options --> Intellicode.",
+                "Please disable IntelliCode to use Codeium. You can access Intellicode settings " +
+                "via Tools --> Options --> Intellicode.",
                 "Disable IntelliCode",
                 OLEMSGICON.OLEMSGICON_INFO,
                 OLEMSGBUTTON.OLEMSGBUTTON_OK,
@@ -513,18 +487,17 @@ internal class CodeiumCompletionHandler : IOleCommandTarget, IDisposable
     }
 
     public int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn,
-        IntPtr pvaOut)
-        {
+                    IntPtr pvaOut)
+    {
         _textViewAdapter.RemoveCommandFilter(this);
         _textViewAdapter.AddCommandFilter(this, out m_nextCommandHandler);
-        
+
         // let the other handlers handle automation functions
         if (VsShellUtilities.IsInAutomationFunction(m_provider.ServiceProvider))
         {
             return m_nextCommandHandler.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
         }
 
-        
         // check for a commit character
         bool regenerateSuggestion = false;
         if (!hasCompletionUpdated && nCmdID == (uint)VSConstants.VSStd2KCmdID.TAB)
@@ -535,18 +508,20 @@ internal class CodeiumCompletionHandler : IOleCommandTarget, IDisposable
                 if (bindings == null || bindings.Length <= 0)
                 {
                     var tagger = GetTagger();
-                    if (tagger == null) { return m_nextCommandHandler.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut); }
+                    if (tagger == null)
+                    {
+                        return m_nextCommandHandler.Exec(
+                            ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
+                    }
 
-                    ICompletionSession session = m_provider.CompletionBroker.GetSessions(_view).FirstOrDefault();
+                    ICompletionSession session =
+                        m_provider.CompletionBroker.GetSessions(_view).FirstOrDefault();
                     if (session != null && session.SelectedCompletionSet != null)
                     {
                         tagger.ClearSuggestion();
                         regenerateSuggestion = true;
                     }
-                    else if (CompleteSuggestion())
-                    {
-                        return VSConstants.S_OK;
-                    }
+                    else if (CompleteSuggestion()) { return VSConstants.S_OK; }
                 }
             }
         }
@@ -576,19 +551,20 @@ internal class CodeiumCompletionHandler : IOleCommandTarget, IDisposable
 
         if (hasCompletionUpdated) { ClearSuggestion(); }
         // gets lsp completions on added character or deletions
-        if (!typedChar.Equals(char.MinValue) || commandID == (uint)VSConstants.VSStd2KCmdID.RETURN || regenerateSuggestion)
+        if (!typedChar.Equals(char.MinValue) ||
+            commandID == (uint)VSConstants.VSStd2KCmdID.RETURN || regenerateSuggestion)
         {
             _ = Task.Run(() =>
-            {
-                try
-                {
-                    GetCompletion();
-                }
-                catch (Exception e)
-                {
-                    Debug.Write(e);
-                }
-            });
+                         {
+                             try
+                             {
+                                 GetCompletion();
+                             }
+                             catch (Exception e)
+                             {
+                                 Debug.Write(e);
+                             }
+                         });
             handled = true;
         }
         else if (commandID == (uint)VSConstants.VSStd2KCmdID.BACKSPACE ||
@@ -597,16 +573,16 @@ internal class CodeiumCompletionHandler : IOleCommandTarget, IDisposable
             ClearSuggestion();
 
             _ = Task.Run(() =>
-            {
-                try
-                {
-                    GetCompletion();
-                }
-                catch (Exception e)
-                {
-                    Debug.Write(e);
-                }
-            });
+                         {
+                             try
+                             {
+                                 GetCompletion();
+                             }
+                             catch (Exception e)
+                             {
+                                 Debug.Write(e);
+                             }
+                         });
             handled = true;
         }
 
@@ -619,7 +595,8 @@ internal class CodeiumCompletionHandler : IOleCommandTarget, IDisposable
 
     public int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)
     {
-        //package.LogAsync("QueeryStatus " + cCmds + " prgCmds = " + prgCmds + "pcmdText " + pCmdText);
+        // package.LogAsync("QueeryStatus " + cCmds + " prgCmds = " + prgCmds + "pcmdText " +
+        // pCmdText);
         return m_nextCommandHandler.QueryStatus(ref pguidCmdGroup, cCmds, prgCmds, pCmdText);
     }
 
@@ -665,7 +642,8 @@ internal class TextViewListener : IVsTextViewCreationListener
 
     internal static TextViewListener? Instance { get; private set; }
 
-    public Dictionary<string, ITextDocument> documentDictionary = new Dictionary<string, ITextDocument>();
+    public Dictionary<string, ITextDocument> documentDictionary =
+        new Dictionary<string, ITextDocument>();
     public void VsTextViewCreated(IVsTextView textViewAdapter)
     {
         Instance = this;
@@ -676,7 +654,8 @@ internal class TextViewListener : IVsTextViewCreationListener
         {
             return new CodeiumCompletionHandler(textViewAdapter, textView, this);
         };
-        textView.TextBuffer.Properties.GetOrCreateSingletonProperty<CodeiumCompletionHandler>(typeof(CodeiumCompletionHandler), createCommandHandler);
+        textView.TextBuffer.Properties.GetOrCreateSingletonProperty<CodeiumCompletionHandler>(
+            typeof(CodeiumCompletionHandler), createCommandHandler);
     }
 }
 }

@@ -48,7 +48,9 @@ public class SettingsPage : DialogPage
     [Category("Windsurf")]
     [DisplayName("Language Server Download URL")]
     [Description(
-        "If you're experiencing network issues with GitHub and can't download the language server, please change this to a GitHub Mirror URL instead. For example: https://gh.api.99988866.xyz/https://github.com/Exafunction/codeium/releases/download")]
+        "If you're experiencing network issues with GitHub and can't download the language " +
+        "server, please change this to a GitHub Mirror URL instead. For example: " +
+        "https://gh.api.99988866.xyz/https://github.com/Exafunction/codeium/releases/download")]
     public string ExtensionBaseUrl
     {
         get {
@@ -90,20 +92,18 @@ public class SettingsPage : DialogPage
     [Description("AI-powered inline action buttons in your editor. (Reload Required)")]
     public bool EnableCodeLens
     {
-        get
-        {
+        get {
             return enableCodeLens;
         }
-        set
-        {
+        set {
             enableCodeLens = value;
         }
     }
 
     [Category("Windsurf")]
     [DisplayName("Enable language server proxy")]
-    [Description(
-        "If you're experiencing network issues with the language server, we recommend enabling this option and using a VPN to resolve the issue. Requires restart.")]
+    [Description("If you're experiencing network issues with the language server, we recommend " +
+                 "enabling this option and using a VPN to resolve the issue. Requires restart.")]
     public bool EnableLanguageServerProxy
     {
         get {
@@ -117,7 +117,8 @@ public class SettingsPage : DialogPage
     [Category("Windsurf")]
     [DisplayName("Enable Windsurf Indexing")]
     [Description(
-        "Allows Windsurf to index your current repository and provide better chat and autocomplete responses based on relevant parts of your codebase. Requires restart.")]
+        "Allows Windsurf to index your current repository and provide better chat and " +
+        "autocomplete responses based on relevant parts of your codebase. Requires restart.")]
     public bool EnableIndexing
     {
         get {
@@ -130,8 +131,8 @@ public class SettingsPage : DialogPage
 
     [Category("Windsurf")]
     [DisplayName("Indexing Max Workspace Size (File Count)")]
-    [Description(
-        "If indexing is enabled, we will only attempt to index workspaces that have up to this many files. This file count ignores .gitignore and binary files.")]
+    [Description("If indexing is enabled, we will only attempt to index workspaces that have up " +
+                 "to this many files. This file count ignores .gitignore and binary files.")]
     public int IndexingMaxWorkspaceSize
     {
         get {
@@ -144,8 +145,8 @@ public class SettingsPage : DialogPage
 
     [Category("Windsurf")]
     [DisplayName("Directories to Index List Path")]
-    [Description(
-        "Absolute path to a .txt file that contains a line separated list of absolute paths of directories to index. Requires restart.")]
+    [Description("Absolute path to a .txt file that contains a line separated list of absolute " +
+                 "paths of directories to index. Requires restart.")]
     public string IndexingFilesListPath
     {
         get {
@@ -157,16 +158,14 @@ public class SettingsPage : DialogPage
     }
     [Category("Windsurf")]
     [DisplayName("Index Open Files")]
-    [Description(
-       "Windsurf will attempt to parse the project files that the files open upon IDE startup belong to. Requires restart.")]
+    [Description("Windsurf will attempt to parse the project files that the files open upon IDE " +
+                 "startup belong to. Requires restart.")]
     public bool IndexOpenFiles
     {
-        get
-        {
+        get {
             return indexOpenFiles;
         }
-        set
-        {
+        set {
             indexOpenFiles = value;
         }
     }

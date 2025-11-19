@@ -76,9 +76,9 @@ public sealed class CodeiumVSPackage : ToolkitPackage
         {
             await LogAsync(
                 $"CodeiumVSPackage.InitializeAsync: Failed to register commands; Exception {ex}");
-            await VS.MessageBox.ShowErrorAsync(
-                "Windsurf: Failed to register commands.",
-                "Windsurf might not work correctly. Please check the output window for more details.");
+            await VS.MessageBox.ShowErrorAsync("Windsurf: Failed to register commands.",
+                                               "Windsurf might not work correctly. Please check " +
+                                               "the output window for more details.");
         }
 
         try
@@ -226,9 +226,7 @@ public sealed class CodeiumVSPackage : ToolkitPackage
     {
         Action<string>[] methods = [
             (_url) =>
-            {
-                Process.Start(new ProcessStartInfo { FileName = _url, UseShellExecute = true });
-            },
+            { Process.Start(new ProcessStartInfo { FileName = _url, UseShellExecute = true }); },
             (_url) =>
             { Process.Start("explorer.exe", _url); },
             (_url) =>

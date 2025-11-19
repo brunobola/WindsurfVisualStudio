@@ -184,8 +184,8 @@ internal class InlineDiffView
 
         // should not happen
         if (vsTextView is not IVsUserData codeWindowData)
-            throw new InvalidOperationException(
-                "Creating DifferenceViewerWithAdapters failed: Unable to cast IVsTextView to IVsUserData.");
+            throw new InvalidOperationException("Creating DifferenceViewerWithAdapters failed: " +
+                                                "Unable to cast IVsTextView to IVsUserData.");
 
         // set the roles and text view model for it
         SetRolesAndModel(codeWindowData, textViewModel, roles);

@@ -185,12 +185,13 @@ public partial class Document : global::ProtoBuf.IExtensible
 
     [global::ProtoBuf.ProtoMember(12)]
     [global::System.ComponentModel.DefaultValue("")]
-    public string absolute_uri { get; set; } = "";
+    public string absolute_uri {
+        get; set;
+    } = "";
 
     [global::ProtoBuf.ProtoMember(2)]
     [global::System.ComponentModel.DefaultValue("")]
-    public string relative_path
-    {
+    public string relative_path {
         get; set;
     } = "";
 
@@ -417,7 +418,9 @@ public partial class CodeContextItem : global::ProtoBuf.IExtensible
 
     [global::ProtoBuf.ProtoMember(16)]
     [global::System.ComponentModel.DefaultValue("")]
-    public string absolute_uri { get; set; } = "";
+    public string absolute_uri {
+        get; set;
+    } = "";
 
     [global::ProtoBuf.ProtoMember(2)]
     public global::System.Collections.Generic.List<WorkspacePath> workspace_paths {
@@ -497,7 +500,9 @@ public partial class WorkspacePath : global::ProtoBuf.IExtensible
 
     [global::ProtoBuf.ProtoMember(3)]
     [global::System.ComponentModel.DefaultValue("")]
-    public string workspace_uri { get; set; } = "";
+    public string workspace_uri {
+        get; set;
+    } = "";
 
     [global::ProtoBuf.ProtoMember(2)]
     [global::System.ComponentModel.DefaultValue("")]
@@ -771,8 +776,7 @@ public partial class CompletionsRequest : global::ProtoBuf.IExtensible
 
     [global::ProtoBuf.ProtoMember(21)]
     [global::System.ComponentModel.DefaultValue("")]
-    public string context_prompt
-    {
+    public string context_prompt {
         get; set;
     } = "";
 
@@ -798,8 +802,7 @@ public partial class CompletionsRequest : global::ProtoBuf.IExtensible
     } = new global::System.Collections.Generic.List<PromptStageLatency>();
 
     [global::ProtoBuf.ProtoMember(20)]
-    public ulong num_tokenized_bytes
-    {
+    public ulong num_tokenized_bytes {
         get; set;
     }
 
@@ -816,8 +819,7 @@ public partial class CompletionsRequest : global::ProtoBuf.IExtensible
 
     [global::ProtoBuf.ProtoMember(5)]
     [global::System.ComponentModel.DefaultValue("")]
-    public string absolute_path
-    {
+    public string absolute_path {
         get; set;
     } = "";
 
@@ -829,8 +831,7 @@ public partial class CompletionsRequest : global::ProtoBuf.IExtensible
 
     [global::ProtoBuf.ProtoMember(6)]
     [global::System.ComponentModel.DefaultValue("")]
-    public string relative_path
-    {
+    public string relative_path {
         get; set;
     } = "";
 
@@ -842,8 +843,7 @@ public partial class CompletionsRequest : global::ProtoBuf.IExtensible
 
     [global::ProtoBuf.ProtoMember(13)]
     [global::System.ComponentModel.DefaultValue("")]
-    public string workspace
-    {
+    public string workspace {
         get; set;
     } = "";
 
@@ -861,15 +861,13 @@ public partial class CompletionsRequest : global::ProtoBuf.IExtensible
 
     [global::ProtoBuf.ProtoMember(19)]
     [global::System.ComponentModel.DefaultValue("")]
-    public string experiment_variant_json
-    {
+    public string experiment_variant_json {
         get; set;
     } = "";
 
     [global::ProtoBuf.ProtoMember(10)]
     [global::System.ComponentModel.DefaultValue("")]
-    public string model
-    {
+    public string model {
         get; set;
     } = "";
 
@@ -901,11 +899,9 @@ public partial class CompletionsRequest : global::ProtoBuf.IExtensible
 
     [global::ProtoBuf.ProtoMember(22)]
     [global::System.ComponentModel.DefaultValue("")]
-    public string eval_suffix
-    {
+    public string eval_suffix {
         get; set;
     } = "";
-
 }
 
 [global::ProtoBuf.ProtoContract()]
@@ -1327,8 +1323,7 @@ public partial class GetChatMessageRequest : global::ProtoBuf.IExtensible
     }
 
     [global::ProtoBuf.ProtoMember(6)]
-    public global::System.Collections.Generic.List<string> open_document_paths
-    {
+    public global::System.Collections.Generic.List<string> open_document_paths {
         get;
     } = new global::System.Collections.Generic.List<string>();
 
@@ -1338,8 +1333,7 @@ public partial class GetChatMessageRequest : global::ProtoBuf.IExtensible
     } = new global::System.Collections.Generic.List<string>();
 
     [global::ProtoBuf.ProtoMember(7)]
-    public global::System.Collections.Generic.List<string> workspace_paths
-    {
+    public global::System.Collections.Generic.List<string> workspace_paths {
         get;
     } = new global::System.Collections.Generic.List<string>();
 
@@ -1573,8 +1567,7 @@ public partial class IntentFunctionExplain : global::ProtoBuf.IExtensible
 
     [global::ProtoBuf.ProtoMember(3)]
     [global::System.ComponentModel.DefaultValue("")]
-    public string file_path
-    {
+    public string file_path {
         get; set;
     } = "";
 
@@ -1589,8 +1582,9 @@ public partial class IntentFunctionExplain : global::ProtoBuf.IExtensible
 public partial class FunctionInfo : global::ProtoBuf.IExtensible
 {
     private global::ProtoBuf.IExtension __pbn__extensionData;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-        => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
+    global::ProtoBuf.IExtension
+        global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing) =>
+        global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
     [global::ProtoBuf.ProtoMember(1, Name = @"raw_source")]
     [global::System.ComponentModel.DefaultValue("")]
@@ -1598,44 +1592,64 @@ public partial class FunctionInfo : global::ProtoBuf.IExtensible
 
     [global::ProtoBuf.ProtoMember(2, Name = @"clean_function")]
     [global::System.ComponentModel.DefaultValue("")]
-    public string CleanFunction { get; set; } = "";
+    public string CleanFunction {
+        get; set;
+    } = "";
 
     [global::ProtoBuf.ProtoMember(3, Name = @"docstring")]
     [global::System.ComponentModel.DefaultValue("")]
-    public string Docstring { get; set; } = "";
+    public string Docstring {
+        get; set;
+    } = "";
 
     [global::ProtoBuf.ProtoMember(4, Name = @"node_name")]
     [global::System.ComponentModel.DefaultValue("")]
-    public string NodeName { get; set; } = "";
+    public string NodeName {
+        get; set;
+    } = "";
 
     [global::ProtoBuf.ProtoMember(5, Name = @"params")]
     [global::System.ComponentModel.DefaultValue("")]
-    public string Params { get; set; } = "";
+    public string Params {
+        get; set;
+    } = "";
 
     [global::ProtoBuf.ProtoMember(6, Name = @"definition_line")]
-    public int DefinitionLine { get; set; }
+    public int DefinitionLine {
+        get; set;
+    }
 
     [global::ProtoBuf.ProtoMember(7, Name = @"start_line")]
-    public int StartLine { get; set; }
+    public int StartLine {
+        get; set;
+    }
 
     [global::ProtoBuf.ProtoMember(8, Name = @"end_line")]
-    public int EndLine { get; set; }
+    public int EndLine {
+        get; set;
+    }
 
     [global::ProtoBuf.ProtoMember(9, Name = @"start_col")]
-    public int StartCol { get; set; }
+    public int StartCol {
+        get; set;
+    }
 
     [global::ProtoBuf.ProtoMember(10, Name = @"end_col")]
-    public int EndCol { get; set; }
+    public int EndCol {
+        get; set;
+    }
 
     [global::ProtoBuf.ProtoMember(11, Name = @"leading_whitespace")]
     [global::System.ComponentModel.DefaultValue("")]
-    public string LeadingWhitespace { get; set; } = "";
+    public string LeadingWhitespace {
+        get; set;
+    } = "";
 
     [global::ProtoBuf.ProtoMember(12, Name = @"language")]
-    public Language Language { get; set; }
-
+    public Language Language {
+        get; set;
+    }
 }
-
 
 [global::ProtoBuf.ProtoContract()]
 public partial class IntentFunctionDocstring : global::ProtoBuf.IExtensible
@@ -1655,8 +1669,7 @@ public partial class IntentFunctionDocstring : global::ProtoBuf.IExtensible
 
     [global::ProtoBuf.ProtoMember(3)]
     [global::System.ComponentModel.DefaultValue("")]
-    public string file_path
-    {
+    public string file_path {
         get; set;
     } = "";
 
@@ -1685,8 +1698,7 @@ public partial class IntentFunctionRefactor : global::ProtoBuf.IExtensible
 
     [global::ProtoBuf.ProtoMember(3)]
     [global::System.ComponentModel.DefaultValue("")]
-    public string file_path
-    {
+    public string file_path {
         get; set;
     } = "";
 
@@ -1721,8 +1733,7 @@ public partial class IntentCodeBlockExplain : global::ProtoBuf.IExtensible
 
     [global::ProtoBuf.ProtoMember(3)]
     [global::System.ComponentModel.DefaultValue("")]
-    public string file_path
-    {
+    public string file_path {
         get; set;
     } = "";
 
@@ -1784,8 +1795,7 @@ public partial class IntentCodeBlockRefactor : global::ProtoBuf.IExtensible
 
     [global::ProtoBuf.ProtoMember(3)]
     [global::System.ComponentModel.DefaultValue("")]
-    public string file_path
-    {
+    public string file_path {
         get; set;
     } = "";
 
@@ -1867,8 +1877,7 @@ public partial class IntentProblemExplain : global::ProtoBuf.IExtensible
 
     [global::ProtoBuf.ProtoMember(5)]
     [global::System.ComponentModel.DefaultValue("")]
-    public string file_path
-    {
+    public string file_path {
         get; set;
     } = "";
 
@@ -1903,8 +1912,7 @@ public partial class IntentGenerateCode : global::ProtoBuf.IExtensible
 
     [global::ProtoBuf.ProtoMember(3)]
     [global::System.ComponentModel.DefaultValue("")]
-    public string file_path
-    {
+    public string file_path {
         get; set;
     } = "";
 
@@ -1938,8 +1946,7 @@ public partial class IntentClassExplain : global::ProtoBuf.IExtensible
 
     [global::ProtoBuf.ProtoMember(3)]
     [global::System.ComponentModel.DefaultValue("")]
-    public string file_path
-    {
+    public string file_path {
         get; set;
     } = "";
 
@@ -1954,55 +1961,81 @@ public partial class IntentClassExplain : global::ProtoBuf.IExtensible
 public partial class ClassInfo : global::ProtoBuf.IExtensible
 {
     private global::ProtoBuf.IExtension __pbn__extensionData;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-        => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
+    global::ProtoBuf.IExtension
+        global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing) =>
+        global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
     [global::ProtoBuf.ProtoMember(1, Name = @"raw_source")]
     [global::System.ComponentModel.DefaultValue("")]
     public string RawSource { get; set; } = "";
 
     [global::ProtoBuf.ProtoMember(2, Name = @"start_line")]
-    public int StartLine { get; set; }
+    public int StartLine {
+        get; set;
+    }
 
     [global::ProtoBuf.ProtoMember(3, Name = @"end_line")]
-    public int EndLine { get; set; }
+    public int EndLine {
+        get; set;
+    }
 
     [global::ProtoBuf.ProtoMember(4, Name = @"start_col")]
-    public int StartCol { get; set; }
+    public int StartCol {
+        get; set;
+    }
 
     [global::ProtoBuf.ProtoMember(5, Name = @"end_col")]
-    public int EndCol { get; set; }
+    public int EndCol {
+        get; set;
+    }
 
     [global::ProtoBuf.ProtoMember(6, Name = @"leading_whitespace")]
     [global::System.ComponentModel.DefaultValue("")]
-    public string LeadingWhitespace { get; set; } = "";
+    public string LeadingWhitespace {
+        get; set;
+    } = "";
 
     [global::ProtoBuf.ProtoMember(7, Name = @"fields_and_constructors")]
-    public global::System.Collections.Generic.List<string> FieldsAndConstructors { get; } = new global::System.Collections.Generic.List<string>();
+    public global::System.Collections.Generic.List<string> FieldsAndConstructors {
+        get;
+    } = new global::System.Collections.Generic.List<string>();
 
     [global::ProtoBuf.ProtoMember(8, Name = @"docstring")]
     [global::System.ComponentModel.DefaultValue("")]
-    public string Docstring { get; set; } = "";
+    public string Docstring {
+        get; set;
+    } = "";
 
     [global::ProtoBuf.ProtoMember(9, Name = @"node_name")]
     [global::System.ComponentModel.DefaultValue("")]
-    public string NodeName { get; set; } = "";
+    public string NodeName {
+        get; set;
+    } = "";
 
     [global::ProtoBuf.ProtoMember(10, Name = @"methods")]
-    public global::System.Collections.Generic.List<FunctionInfo> Methods { get; } = new global::System.Collections.Generic.List<FunctionInfo>();
+    public global::System.Collections.Generic.List<FunctionInfo> Methods {
+        get;
+    } = new global::System.Collections.Generic.List<FunctionInfo>();
 
     [global::ProtoBuf.ProtoMember(11, Name = @"node_lineage")]
-    public global::System.Collections.Generic.List<string> NodeLineages { get; } = new global::System.Collections.Generic.List<string>();
+    public global::System.Collections.Generic.List<string> NodeLineages {
+        get;
+    } = new global::System.Collections.Generic.List<string>();
 
     [global::ProtoBuf.ProtoMember(12, Name = @"is_exported")]
-    public bool IsExported { get; set; }
+    public bool IsExported {
+        get; set;
+    }
 
     [global::ProtoBuf.ProtoMember(13, Name = @"language")]
-    public Language Language { get; set; }
+    public Language Language {
+        get; set;
+    }
 
     [global::ProtoBuf.ProtoMember(14, Name = @"definition_line")]
-    public int DefinitionLine { get; set; }
-
+    public int DefinitionLine {
+        get; set;
+    }
 }
 
 [global::ProtoBuf.ProtoContract()]
@@ -2067,14 +2100,13 @@ public partial class ChatMessageActionEdit : global::ProtoBuf.IExtensible
 
     [global::ProtoBuf.ProtoMember(1)]
     [global::System.ComponentModel.DefaultValue("")]
-    public string file_path
-    {
-        get; set;
-    } = "";
+    public string file_path { get; set; } = "";
 
     [global::ProtoBuf.ProtoMember(6)]
     [global::System.ComponentModel.DefaultValue("")]
-    public string uri { get; set; } = "";
+    public string uri {
+        get; set;
+    } = "";
 
     [global::ProtoBuf.ProtoMember(2)]
     public DiffBlock diff {
@@ -2273,7 +2305,9 @@ public partial class OpenFilePointer : global::ProtoBuf.IExtensible
 
     [global::ProtoBuf.ProtoMember(6)]
     [global::System.ComponentModel.DefaultValue("")]
-    public string file_uri { get; set; } = "";
+    public string file_uri {
+        get; set;
+    } = "";
 
     [global::ProtoBuf.ProtoMember(2)]
     public int start_line {
@@ -2341,8 +2375,7 @@ public partial class ApplyDiff : global::ProtoBuf.IExtensible
 
     [global::ProtoBuf.ProtoMember(2)]
     [global::System.ComponentModel.DefaultValue("")]
-    public string file_path
-    {
+    public string file_path {
         get; set;
     } = "";
 
@@ -2714,49 +2747,52 @@ public partial class AddTrackedWorkspaceResponse : global::ProtoBuf.IExtensible
 public partial class GetFunctionsRequest : global::ProtoBuf.IExtensible
 {
     private global::ProtoBuf.IExtension __pbn__extensionData;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-        => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
+    global::ProtoBuf.IExtension
+        global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing) =>
+        global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
     [global::ProtoBuf.ProtoMember(1, Name = @"document")]
     public Document document { get; set; }
-
 }
 
 [global::ProtoBuf.ProtoContract()]
 public partial class GetFunctionsResponse : global::ProtoBuf.IExtensible
 {
     private global::ProtoBuf.IExtension __pbn__extensionData;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-        => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
+    global::ProtoBuf.IExtension
+        global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing) =>
+        global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
     [global::ProtoBuf.ProtoMember(1, Name = @"function_captures")]
-    public global::System.Collections.Generic.List<FunctionInfo> FunctionCaptures { get; } = new global::System.Collections.Generic.List<FunctionInfo>();
-
+    public global::System.Collections.Generic.List<FunctionInfo> FunctionCaptures {
+        get;
+    } = new global::System.Collections.Generic.List<FunctionInfo>();
 }
-
 
 [global::ProtoBuf.ProtoContract()]
 public partial class GetClassInfosRequest : global::ProtoBuf.IExtensible
 {
     private global::ProtoBuf.IExtension __pbn__extensionData;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-        => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
+    global::ProtoBuf.IExtension
+        global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing) =>
+        global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
     [global::ProtoBuf.ProtoMember(1, Name = @"document")]
     public Document document { get; set; }
-
 }
 
 [global::ProtoBuf.ProtoContract()]
 public partial class GetClassInfosResponse : global::ProtoBuf.IExtensible
 {
     private global::ProtoBuf.IExtension __pbn__extensionData;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-        => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
+    global::ProtoBuf.IExtension
+        global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing) =>
+        global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
     [global::ProtoBuf.ProtoMember(1, Name = @"class_captures")]
-    public global::System.Collections.Generic.List<ClassInfo> ClassCaptures { get; } = new global::System.Collections.Generic.List<ClassInfo>();
-
+    public global::System.Collections.Generic.List<ClassInfo> ClassCaptures {
+        get;
+    } = new global::System.Collections.Generic.List<ClassInfo>();
 }
 
 [global::ProtoBuf.ProtoContract()]

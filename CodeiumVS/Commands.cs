@@ -50,13 +50,14 @@ internal sealed class CommandSignOut : BaseCommand<CommandSignOut>
 }
 
 [Command(PackageIds.CompleteSuggestion)]
-internal sealed class CommandCompleteSuggestion : BaseCommandCompletionHandler<CommandCompleteSuggestion>
+internal sealed class CommandCompleteSuggestion
+    : BaseCommandCompletionHandler<CommandCompleteSuggestion>
 {
     protected override async Task ExecuteAsync(OleMenuCmdEventArgs e)
     {
         try
         {
-            if(completionHandler == null) return;
+            if (completionHandler == null) return;
             completionHandler.CompleteSuggestion();
         }
         catch (Exception ex)
@@ -68,7 +69,8 @@ internal sealed class CommandCompleteSuggestion : BaseCommandCompletionHandler<C
 }
 
 [Command(PackageIds.ShowNextSuggestion)]
-internal sealed class CommandShowNextSuggestion : BaseCommandCompletionHandler<CommandShowNextSuggestion>
+internal sealed class CommandShowNextSuggestion
+    : BaseCommandCompletionHandler<CommandShowNextSuggestion>
 {
     protected override async Task ExecuteAsync(OleMenuCmdEventArgs e)
     {
@@ -99,8 +101,7 @@ internal class BaseCommandCompletionHandler<T> : BaseCommand<T>
         if (lastQuery != 0 && timeStamp - lastQuery < 500) return;
         lastQuery = timeStamp;
 
-        ThreadHelper.JoinableTaskFactory.Run(async delegate
-        {
+        ThreadHelper.JoinableTaskFactory.Run(async delegate {
             // any interactions with the `IVsTextView` should be done on the main thread
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
@@ -336,7 +337,6 @@ internal class CommandRefactorCodeBlock : BaseCommandContextMenu<CommandRefactor
             if (functionInfo != null)
                 await controller.RefactorFunctionAsync(
                     prompt, docView.Document.FilePath, functionInfo);
-            
         }
         else
         {
@@ -366,7 +366,6 @@ internal class BaseCommandCodeLens<T> : BaseCommand<T>
         lastQuery = timeStamp;
 
         ThreadHelper.JoinableTaskFactory.Run(async delegate {
-
             // any interactions with the `IVsTextView` should be done on the main thread
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
@@ -395,19 +394,16 @@ internal class BaseCommandCodeLens<T> : BaseCommand<T>
         CancellationTokenSource cts = new CancellationTokenSource();
         IList<Packets.FunctionInfo>? functions =
             await CodeiumVSPackage.Instance.LanguageServer.GetFunctionsAsync(
+                docView.FilePath, text, languageInfo, 0, cts.Token);
+
+        IList<Packets.ClassInfo>? classes =
+            await CodeiumVSPackage.Instance.LanguageServer.GetClassInfosAsync(
                 docView.FilePath,
                 text,
                 languageInfo,
                 0,
+                docView.TextView.Options.GetOptionValue(DefaultOptions.NewLineCharacterOptionId),
                 cts.Token);
-
-        IList<Packets.ClassInfo>? classes = await CodeiumVSPackage.Instance.LanguageServer.GetClassInfosAsync(
-            docView.FilePath,
-            text,
-            languageInfo,
-            0,
-            docView.TextView.Options.GetOptionValue(DefaultOptions.NewLineCharacterOptionId),
-            cts.Token);
 
         FunctionInfo minFunction = null;
         int minDistance = int.MaxValue;
@@ -439,8 +435,10 @@ internal class BaseCommandCodeLens<T> : BaseCommand<T>
         CodeBlockInfo codeBlockInfo = null;
         try
         {
-            var snapshotLineStart = docView.TextBuffer.CurrentSnapshot.GetLineFromLineNumber(c.StartLine);
-            var snapShotLineEnd = docView.TextBuffer.CurrentSnapshot.GetLineFromLineNumber(c.EndLine);
+            var snapshotLineStart =
+                docView.TextBuffer.CurrentSnapshot.GetLineFromLineNumber(c.StartLine);
+            var snapShotLineEnd =
+                docView.TextBuffer.CurrentSnapshot.GetLineFromLineNumber(c.EndLine);
 
             var start_position = snapshotLineStart.Start;
             var end_position = snapShotLineEnd.End;
@@ -451,10 +449,9 @@ internal class BaseCommandCodeLens<T> : BaseCommand<T>
             var end_col = end_position - snapShotLineEnd.Start.Position + 1;
 
             text = docView.TextBuffer.CurrentSnapshot.GetText(start_position,
-                end_position - start_position);
+                                                              end_position - start_position);
 
-            codeBlockInfo = new()
-            {
+            codeBlockInfo = new() {
                 raw_source = text,
                 start_line = start_line,
                 end_line = end_line,
@@ -465,18 +462,15 @@ internal class BaseCommandCodeLens<T> : BaseCommand<T>
         catch (Exception ex)
         {
             Task.Run(async () =>
-            {
-                return CodeiumVSPackage.Instance.LogAsync(ex.ToString());
-            });
+                     { return CodeiumVSPackage.Instance.LogAsync(ex.ToString()); });
         }
         return codeBlockInfo;
     }
-
 }
 
-
 [Command(PackageIds.RefactorSelectionCodeBlock)]
-internal class CommandRefactorSelectionCodeBlock : BaseCommandCodeLens<CommandRefactorSelectionCodeBlock>
+internal class CommandRefactorSelectionCodeBlock
+    : BaseCommandCodeLens<CommandRefactorSelectionCodeBlock>
 {
     protected override async Task ExecuteAsync(OleMenuCmdEventArgs e)
     {
@@ -496,10 +490,11 @@ internal class CommandRefactorSelectionCodeBlock : BaseCommandCodeLens<CommandRe
                 startPos = ctx.ApplicableSpan.Value.Start;
                 snapshotLine = docView.TextBuffer.CurrentSnapshot.GetLineFromPosition(startPos);
                 int startLine = snapshotLine.LineNumber;
-                TextBounds selectionLine = docView.TextView.TextViewLines.GetCharacterBounds(snapshotLine.Start);
+                TextBounds selectionLine =
+                    docView.TextView.TextViewLines.GetCharacterBounds(snapshotLine.Start);
                 Point selectionScreenPos = docView.TextView.VisualElement.PointToScreen(
                     new Point(selectionLine.Left - docView.TextView.ViewportLeft,
-                        selectionLine.Top - docView.TextView.ViewportTop));
+                              selectionLine.Top - docView.TextView.ViewportTop));
 
                 var start = docView.TextView.TextViewLines.GetCharacterBounds(snapshotLine.Start);
 
@@ -508,8 +503,8 @@ internal class CommandRefactorSelectionCodeBlock : BaseCommandCodeLens<CommandRe
                 highlighter?.AddHighlight(snapshotLine.Extent);
 
                 var dialog = RefactorCodeDialogWindow.GetOrCreate();
-                string? prompt =
-                    await dialog.ShowAndGetPromptAsync(languageInfo, selectionScreenPos.X, selectionScreenPos.Y);
+                string? prompt = await dialog.ShowAndGetPromptAsync(
+                    languageInfo, selectionScreenPos.X, selectionScreenPos.Y);
 
                 highlighter?.ClearAll();
 
@@ -518,8 +513,7 @@ internal class CommandRefactorSelectionCodeBlock : BaseCommandCodeLens<CommandRe
                 if (prompt == null) return;
                 if (functionInfo != null)
                 {
-                    controller.RefactorFunctionAsync(
-                        prompt, docView.FilePath, functionInfo);
+                    controller.RefactorFunctionAsync(prompt, docView.FilePath, functionInfo);
                 }
                 else
                 {
@@ -554,7 +548,8 @@ internal class ExplainSelectionCodeBlock : BaseCommandCodeLens<ExplainSelectionC
                 await CodeiumVSPackage.Instance.LogAsync(e.InValue.ToString());
                 var ctx = e.InValue as CodeLensDescriptorContext;
                 int startPos = ctx.ApplicableSpan.Value.Start;
-                ITextSnapshotLine line = docView.TextBuffer.CurrentSnapshot.GetLineFromPosition(startPos);
+                ITextSnapshotLine line =
+                    docView.TextBuffer.CurrentSnapshot.GetLineFromPosition(startPos);
                 int startLine = line.LineNumber;
 
                 await ResolveCodeBlock(startLine);
@@ -578,9 +573,9 @@ internal class ExplainSelectionCodeBlock : BaseCommandCodeLens<ExplainSelectionC
     }
 }
 
-
 [Command(PackageIds.GenerateSelectionFunctionDocstring)]
-internal class GenerateSelectionFunctionDocstring : BaseCommandCodeLens<GenerateSelectionFunctionDocstring>
+internal class GenerateSelectionFunctionDocstring
+    : BaseCommandCodeLens<GenerateSelectionFunctionDocstring>
 {
     protected override async Task ExecuteAsync(OleMenuCmdEventArgs e)
     {
@@ -595,7 +590,8 @@ internal class GenerateSelectionFunctionDocstring : BaseCommandCodeLens<Generate
                 await CodeiumVSPackage.Instance.LogAsync(e.InValue.ToString());
                 var ctx = e.InValue as CodeLensDescriptorContext;
                 int startPos = ctx.ApplicableSpan.Value.Start;
-                ITextSnapshotLine line = docView.TextBuffer.CurrentSnapshot.GetLineFromPosition(startPos);
+                ITextSnapshotLine line =
+                    docView.TextBuffer.CurrentSnapshot.GetLineFromPosition(startPos);
                 int startLine = line.LineNumber;
 
                 await ResolveCodeBlock(startLine);

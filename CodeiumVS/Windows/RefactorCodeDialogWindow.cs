@@ -70,28 +70,30 @@ public partial class RefactorCodeDialogWindow : DialogWindow
             new RefactorData("Add logging statements so that it can be easily debugged",
                              KnownMonikers.StartLogging),
 
-            new RefactorData(
-                "Add type annotations to the code",
-                KnownMonikers.NewType,
-                "Add type annotations to this code block, including the function arguments and return type." +
-                    " Modify the docstring to reflect the types.",
-                [
-                    Packets.Language.LANGUAGE_CSHARP,
-                    Packets.Language.LANGUAGE_TYPESCRIPT,
-                    Packets.Language.LANGUAGE_PYTHON
-                ]),
+            new RefactorData("Add type annotations to the code",
+                             KnownMonikers.NewType,
+                             "Add type annotations to this code block, including the function " +
+                             "arguments and return type." +
+                                 " Modify the docstring to reflect the types.",
+                             [
+                                 Packets.Language.LANGUAGE_CSHARP,
+                                 Packets.Language.LANGUAGE_TYPESCRIPT,
+                                 Packets.Language.LANGUAGE_PYTHON
+                             ]),
 
-            new RefactorData(
-                "Clean up this code",
-                KnownMonikers.CleanData,
-                "Clean up this code by standardizing variable names, removing debugging statements, " +
-                    "improving readability, and more. Explain what you did to clean it up in a short and concise way."),
+            new RefactorData("Clean up this code",
+                             KnownMonikers.CleanData,
+                             "Clean up this code by standardizing variable names, removing " +
+                             "debugging statements, " +
+                                 "improving readability, and more. Explain what you did to clean " +
+                                 "it up in a short and concise way."),
 
             new RefactorData(
                 "Check for bugs and null pointers",
                 KnownMonikers.Spy,
                 "Check for bugs such as null pointer references, unhandled exceptions, and more." +
-                    " If you don't see anything obvious, reply that things look good and that the user" +
+                    " If you don't see anything obvious, reply that things look good and that " +
+                    "the user" +
                     " can reply with a stack trace to get more information."),
 
             new RefactorData("Implement the code for the TODO comment",

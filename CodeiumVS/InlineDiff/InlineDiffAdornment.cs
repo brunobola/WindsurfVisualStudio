@@ -132,10 +132,10 @@ internal class InlineDiffAdornment : TextViewExtension<IWpfTextView, InlineDiffA
         Assumes.True(position > 0 && length > 0 &&
                          (position + length) <= _hostView.TextSnapshot.Length,
                      "InlineDiffAdornment.CreateDiff: Invalid position and length parameter");
-        Assumes.True(
-            MefProvider.Instance.TextDocumentFactoryService.TryGetTextDocument(
-                _hostView.TextDataModel.DocumentBuffer, out var textDocument),
-            "InlineDiffAdornment.CreateDiff: Could not get text document for the current host view");
+        Assumes.True(MefProvider.Instance.TextDocumentFactoryService.TryGetTextDocument(
+                         _hostView.TextDataModel.DocumentBuffer, out var textDocument),
+                     "InlineDiffAdornment.CreateDiff: Could not get text document for the " +
+                     "current host view");
 
         // create a temporary file to store the diff
         string rightFileName = Path.GetTempFileName() + Path.GetExtension(textDocument.FilePath);
@@ -335,9 +335,9 @@ internal class InlineDiffAdornment : TextViewExtension<IWpfTextView, InlineDiffA
         int openingResult = MefProvider.Instance.DocumentOpeningService.OpenDocumentViaProject(
             tempFileName, Guid.Empty, out var _, out var _, out var _, out _rightWindowFrame);
 
-        Assumes.True(
-            ErrorHandler.Succeeded(openingResult),
-            "InlineDiffAdornment.CreateRightProjectionBuffer: Could not open the document for temporary file");
+        Assumes.True(ErrorHandler.Succeeded(openingResult),
+                     "InlineDiffAdornment.CreateRightProjectionBuffer: Could not open the " +
+                     "document for temporary file");
 
         VsShellUtilities.GetTextView(_rightWindowFrame).GetBuffer(out var sourceTextLines);
         Assumes.True(
@@ -351,10 +351,10 @@ internal class InlineDiffAdornment : TextViewExtension<IWpfTextView, InlineDiffA
             _rightSourceBuffer != null,
             "InlineDiffAdornment.CreateRightProjectionBuffer: Could not create source buffer");
 
-        Assumes.True(
-            MefProvider.Instance.TextDocumentFactoryService.TryGetTextDocument(
-                _rightSourceBuffer, out _rightTextDocument),
-            "InlineDiffAdornment.CreateRightProjectionBuffer: Could not get text document for the temp file");
+        Assumes.True(MefProvider.Instance.TextDocumentFactoryService.TryGetTextDocument(
+                         _rightSourceBuffer, out _rightTextDocument),
+                     "InlineDiffAdornment.CreateRightProjectionBuffer: Could not get text " +
+                     "document for the temp file");
 
         // apply the diff
         using ITextEdit textEdit = _rightSourceBuffer.CreateEdit();
